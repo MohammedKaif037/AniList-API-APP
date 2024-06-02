@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <!-- Add any additional styles or scripts here -->
+</head>
+<body>
+    <h1>Search Results for "{{ query }}"</h1>
+    {% if animes %}
+        <ul>
+            {% for anime in animes %}
+                <li>
+                    <a href="{% url 'anime_detail' pk=anime.pk %}">{{ anime.title }}</a>
+                    <!-- You can display additional information about the anime here -->
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found for "{{ query }}".</p>
+    {% endif %}
+    <!-- Add any additional content or functionality here -->
+</body>
+</html>

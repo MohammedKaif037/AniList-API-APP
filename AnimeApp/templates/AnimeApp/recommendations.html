@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Recommended Anime</h1>
+  <ul>
+    {% for anime in recommended_animes %}
+      <li>
+        <a href="{% url 'anime_detail' anime.pk %}">{{ anime.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

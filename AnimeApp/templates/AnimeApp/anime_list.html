@@ -1,0 +1,12 @@
+{% extends 'AnimeApp/base.html' %}
+
+{% block content %}
+  <h1>Anime List</h1>
+  <ul>
+    {% for anime in animes %}
+      <li>
+        <a href="{% url 'anime_detail' anime.pk %}">{{ anime.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
