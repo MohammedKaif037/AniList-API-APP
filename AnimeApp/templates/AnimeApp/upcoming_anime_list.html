@@ -1,0 +1,19 @@
+{% extends 'AnimeApp/base.html' %}
+{% block content %}
+<div class="container">
+    <h1 class="mt-4 mb-4">Upcoming Anime</h1>
+    <div class="row">
+        {% for anime in animes %}
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <img src="{{ anime.coverImage.extraLarge }}" class="card-img-top" alt="{{ anime.title.romaji }} cover image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ anime.title.romaji }} {% if anime.title.english %} ({{ anime.title.english }}) {% endif %}</h5>
+                        <p class="card-text">{{ anime.description|safe }}</p>
+                     </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -191,16 +191,23 @@ def character_detail(request, character_id):
         print(f"Error: {response.status_code}")
         print(response.json())  # Print the response content for debugging
         return render(request, "AnimeApp/error.html", {"message": "Failed to fetch character data"})
-
 import requests
 from django.shortcuts import render
-from .models import Anime, Character, AnimeImage
+from datetime import datetime
+
+def get_next_season_and_year():
+    now = datetime.now()
+    month = now.month
+    if 1 <= month <= 3:
+        return 'WINTER', now.year
+    elif 4 <= month <= 6:
+        return 'SPRING', now.year
+    elif 7 <= month <= 9:
+        return 'SUMMER', now.year
+    else:
+        return 'FALL', now.year
 
 def upcoming_anime(request):
-    """
-    Fetches upcoming anime data from AniList GraphQL API.
-    Updates the database with the retrieved data.
-    """
     query = '''
     query ($season: MediaSeason, $seasonYear: Int, $sort: [MediaSort], $page: Int, $perPage: Int) {
         Page (page: $page, perPage: $perPage) {
@@ -234,9 +241,11 @@ def upcoming_anime(request):
     }
     '''
 
+    season, season_year = get_next_season_and_year()
+    
     variables = {
-        'season': 'UPCOMING',  # Specify the season as 'UPCOMING' to get upcoming anime
-        'seasonYear': 2023,  # Specify the year for which you want to get upcoming anime
+        'season': season,
+        'seasonYear': season_year,
         'sort': ['POPULARITY_DESC'],
         'page': 1,
         'perPage': 50,
@@ -246,38 +255,8 @@ def upcoming_anime(request):
     response = requests.post(url, json={"query": query, "variables": variables})
 
     if response.status_code == 200:
-        data = response.json().get("data", {})
-        upcoming_animes_data = data.get("Page", {}).get("media", [])
-
-        for anime_data in upcoming_animes_data:
-            anime, created = Anime.objects.get_or_create(
-                mal_id=anime_data["id"],
-                defaults={
-                    "title": anime_data["title"]["romaji"],
-                    "synopsis": anime_data["description"],
-                },
-            )
-
-            if created:
-                characters_data = anime_data.get("characters", {}).get("nodes", [])
-                for character_data in characters_data:
-                    role = character_data.get("role", "")
-                    Character.objects.get_or_create(
-                        mal_id=character_data["id"],
-                        defaults={
-                            "name": character_data["name"]["full"],
-                            "image_url": character_data["image"]["large"],
-                            "anime": anime,
-                            "role": role
-                        }
-                    )
-
-                image_data = anime_data.get("coverImage", {}).get("extraLarge")
-                if image_data:
-                    AnimeImage.objects.get_or_create(anime=anime, image_url=image_data)
-
-        upcoming_animes = Anime.objects.filter(season='UPCOMING', season_year=2023)
-        return render(request, "AnimeApp/upcoming_anime_list.html", {"upcoming_animes": upcoming_animes})
-
+        data = response.json().get("data", {}).get("Page", {}).get("media", [])
+        return render(request, 'AnimeApp/upcoming_anime_list.html', {'animes': data})
     else:
-        return render(request, "AnimeApp/error.html", {"message": "Failed to fetch data"})
+        return render(request, 'AnimeApp/error.html', {'message': 'Failed to fetch data'})
+

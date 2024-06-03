@@ -4,22 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Add any additional styles or scripts here -->
 </head>
 <body>
-    <h1>Search Results for "{{ query }}"</h1>
-    {% if animes %}
-        <ul>
-            {% for anime in animes %}
-                <li>
-                    <a href="{% url 'anime_detail' pk=anime.pk %}">{{ anime.title }}</a>
-                    <!-- You can display additional information about the anime here -->
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No results found for "{{ query }}".</p>
-    {% endif %}
+    <div class="container">
+        <h1 class="mt-4 mb-4">Search Results for "{{ query }}"</h1>
+        {% if animes %}
+            <div class="list-group">
+                {% for anime in animes %}
+                    <a href="{% url 'anime_detail' pk=anime.pk %}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ anime.title.romaji }} {% if anime.title.english %} ({{ anime.title.english }}) {% endif %}</h5>
+                            <small>{{ anime.season }} {{ anime.season_year }}</small>
+                        </div>
+                        <p class="mb-1">{{ anime.synopsis|truncatewords_html:20 }}</p>
+                        <!-- Add additional fields here -->
+                        <small>Popularity: {{ anime.popularity }}</small>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No results found for "{{ query }}".</p>
+        {% endif %}
+    </div>
+    <!-- Include Bootstrap JS (optional) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- Add any additional content or functionality here -->
 </body>
 </html>
