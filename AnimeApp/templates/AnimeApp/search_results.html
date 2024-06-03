@@ -1,36 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Results</title>
-    <!-- Include Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Add any additional styles or scripts here -->
-</head>
-<body>
-    <div class="container">
-        <h1 class="mt-4 mb-4">Search Results for "{{ query }}"</h1>
-        {% if animes %}
-            <div class="list-group">
-                {% for anime in animes %}
-                    <a href="{% url 'anime_detail' pk=anime.pk %}" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{ anime.title.romaji }} {% if anime.title.english %} ({{ anime.title.english }}) {% endif %}</h5>
-                            <small>{{ anime.season }} {{ anime.season_year }}</small>
-                        </div>
-                        <p class="mb-1">{{ anime.synopsis|truncatewords_html:20 }}</p>
-                        <!-- Add additional fields here -->
-                        <small>Popularity: {{ anime.popularity }}</small>
-                    </a>
-                {% endfor %}
+<!-- search_results.html -->
+{% extends 'AnimeApp/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Search Results for "{{ query }}"</h1>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                {% if matched_animes.coverImage.large %}
+                <a href="{% url 'anime_detail' mal_id=matched_animes.id %}">
+
+                <img src="{{ matched_animes.coverImage.large }}" class="card-img-top" alt="{{ matched_animes.title.romaji }} Cover Image">
+                </a>
+
+                {% else %}
+                <div class="no-image-placeholder"> No Image Available </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ matched_animes.title.romaji }}</h5>
+                    <p class="card-text">{{ matched_animes.description|safe }}</p>
+                </div>
             </div>
-        {% else %}
-            <p>No results found for "{{ query }}".</p>
-        {% endif %}
+        </div>
     </div>
-    <!-- Include Bootstrap JS (optional) -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- Add any additional content or functionality here -->
-</body>
-</html>
+</div>
+{% endblock %}

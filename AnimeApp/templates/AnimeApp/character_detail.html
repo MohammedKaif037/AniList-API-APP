@@ -1,20 +1,24 @@
 {% extends 'AnimeApp/base.html' %}
 
 {% block content %}
-<h1>{{ character.name.full }}</h1>
-{% if character.image.large %}
+<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+  <div>
+    <h1>{{ character.name.full }}</h1>
+    {% if character.image.large %}
     <img src="{{ character.image.large }}" alt="{{ character.name.full }}">
-{% endif %}
-<p><strong>Native Name:</strong> {{ character.name.native }}</p>
-<p><strong>Age:</strong> {{ character.age }}</p>
-<p><strong>Gender:</strong> {{ character.gender }}</p>
-<p><strong>Date of Birth:</strong>
-    {% if character.dateOfBirth.year %}
-        {{ character.dateOfBirth.year }}-{% endif %}
-    {% if character.dateOfBirth.month %}
-        {{ character.dateOfBirth.month }}-{% endif %}
-    {% if character.dateOfBirth.day %}
-        {{ character.dateOfBirth.day }}{% endif %}
-</p>
-<p><strong>Blood Type:</strong> {{ character.bloodType }}</p>
+    {% endif %}
+    <p><strong>Native Name:</strong> {{ character.name.native }}</p>
+    <p><strong>Age:</strong> {{ character.age }}</p>
+    <p><strong>Gender:</strong> {{ character.gender }}</p>
+    <p><strong>Date of Birth:</strong>
+      {% if character.dateOfBirth.year %}
+      {{ character.dateOfBirth.year }}-{% endif %}
+      {% if character.dateOfBirth.month %}
+      {{ character.dateOfBirth.month }}-{% endif %}
+      {% if character.dateOfBirth.day %}
+      {{ character.dateOfBirth.day }}{% endif %}
+    </p>
+    <p><strong>Blood Type:</strong> {{ character.bloodType }}</p>
+  </div>
+</div>
 {% endblock %}

@@ -1,20 +1,25 @@
 {% extends 'AnimeApp/base.html' %}
 {% block content %}
-<div class="container mt-4">
-  <h1>Anime List</h1>
+<div class="container">
+  <h1>Anime Trending</h1>
   <div class="row">
     {% for anime in animes %}
     <div class="col-md-4 mb-4">
       <div class="card">
-        {% if anime.images.first %}
-        <img src="{{ anime.images.first.image_url }}" alt="{{ anime.title }} Cover Image">
-          {% else %}
-            <p>No cover image available.</p>
-          {% endif %}        
-          <div class="card-body">
-          <h5 class="card-title">{{ anime.title }}</h5>
-          <p class="card-text">{{ anime.synopsis|truncatewords:30 }}</p>
-          <a href="{% url 'anime_detail' anime.pk %}" class="btn btn-primary">View Details</a>
+        {% if anime.coverImage.extraLarge %}
+        {% if anime.id %}
+        <a href="{% url 'anime_detail' mal_id=anime.id %}">
+          <img src="{{ anime.coverImage.extraLarge }}" alt="{{ anime.title.romaji }} Cover Image">
+        </a>
+        {% else %}
+        <img src="{{ anime.coverImage.extraLarge }}" alt="{{ anime.title.romaji }} Cover Image">
+        {% endif %}
+        {% else %}
+        <p>No cover image available.</p>
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ anime.title.romaji }}</h5>
+          <!-- You can add more details here if needed -->
         </div>
       </div>
     </div>

@@ -5,48 +5,65 @@ import requests
 def home(request):
     return render(request, 'AnimeApp/base.html')
 
-
 def search_anime(request):
     """
-    Searches for anime based on the user's input.
+    Searches for anime based on the user's input using an external API.
     """
     if request.method == 'GET':
         search_query = request.GET.get('search')
-        # Query the database for anime titles containing the search query
-        matched_animes = Anime.objects.filter(title__icontains=search_query)
-        return render(request, 'AnimeApp/search_results.html', {'animes': matched_animes, 'query': search_query})
-    else:
-        return render(request, 'AnimeApp/error.html', {"message": "Invalid request"})
-def fetch_anime_data(request, sort_by='POPULARITY_DESC'):
-    """
-    Fetches anime data from AniList GraphQL API using the provided query and variables.
-    Updates the database with the retrieved data.
-    """
-    query = '''
-    query ($sort: [MediaSort], $page: Int, $perPage: Int) {
-        Page (page: $page, perPage: $perPage) {
-            pageInfo {
-                total
-                currentPage
-                lastPage
-                hasNextPage
-                perPage
-            }
-            media (sort: $sort) {
+
+        # Construct GraphQL query
+        query = """
+        query ($search: String) {
+            Media (search: $search, type: ANIME) {
                 id
                 title {
                     romaji
                     english
                     native
                 }
-                description
-                characters(page: 1, perPage: 10) {
-                    nodes {
-                        id
-                        name { full }
-                        image { large }
-                    }
+                coverImage {
+                    large
                 }
+                description (asHtml: false)
+                # Add other fields you want to retrieve
+            }
+        }
+        """
+
+        variables = {'search': search_query}
+
+        # Prepare the request data
+        data = {'query': query, 'variables': variables}
+
+        # Send a POST request
+        response = requests.post('https://graphql.anilist.co', json=data)
+        print(f'SEARCHED_RESULTS for {search_query}',response.content)
+
+        if response.status_code == 200:
+            data = response.json()
+            matched_animes = data.get('data', {}).get('Media', [])
+            print('Matched animes',matched_animes)
+            return render(request, 'AnimeApp/search_results.html', {'matched_animes': matched_animes, 'query': search_query})
+        else:
+            return render(request, 'AnimeApp/error.html', {"message": "Failed to fetch data from API"})
+    else:
+        return render(request, 'AnimeApp/error.html', {"message": "Invalid request"})
+def fetch_anime_data(request, sort_by='POPULARITY_DESC'):
+    """
+    Fetches anime data from AniList GraphQL API using the provided query and variables.
+    Renders the fetched data directly in the template.
+    """
+    import requests
+    query = '''
+    query ($sort: [MediaSort], $page: Int, $perPage: Int) {
+        Page (page: $page, perPage: $perPage) {
+            media (sort: $sort) {
+                id
+                title {
+                    romaji
+                }
+                description
                 coverImage {
                     extraLarge
                 }
@@ -54,58 +71,19 @@ def fetch_anime_data(request, sort_by='POPULARITY_DESC'):
         }
     }
     '''
-
     variables = {
         'sort': sort_by,
         'page': 1,
         'perPage': 50,
     }
-
     url = "https://graphql.anilist.co"
     response = requests.post(url, json={"query": query, "variables": variables})
-    # print(response.content)
-
     if response.status_code == 200:
         data = response.json().get("data", {})
-
         animes_data = data.get("Page", {}).get("media", [])
-        print(animes_data,"ANIMES_DATA")
-        for anime_data in animes_data:
-            anime, created = Anime.objects.get_or_create(
-                mal_id=anime_data["id"],
-                defaults={
-                    "title": anime_data["title"]["romaji"],
-                    "synopsis": anime_data["description"],
-                },
-            )
-
-            if created:
-                characters_data = anime_data.get("characters", {}).get("nodes", [])
-                for character_data in characters_data:
-                    role = character_data.get("role", "")  # Check if role exists
-                    Character.objects.get_or_create(
-                        mal_id=character_data["id"],
-                        defaults={
-                            "name": character_data["name"]["full"],
-                            "image_url": character_data["image"]["large"],
-                            "anime": anime,
-                            "role": role
-                        }
-                    )
-
-                image_data = anime_data.get("coverImage", {}).get("extraLarge")
-                if image_data:
-                    AnimeImage.objects.get_or_create(anime=anime, image_url=image_data)
-
-        animes = Anime.objects.all()
-        return render(request, "AnimeApp/anime_list.html", {"animes": animes})
-
+        return render(request, "AnimeApp/anime_list.html", {"animes": animes_data})
     else:
         return render(request, "AnimeApp/error.html", {"message": "Failed to fetch data"})
-
-
-
-
 def anime_list(request):
     animes = Anime.objects.all().prefetch_related('images')
     anime_list = []
@@ -119,10 +97,49 @@ def anime_list(request):
         })
     return render(request, 'AnimeApp/anime_list.html', {'animes': anime_list})
 
-def anime_detail(request, pk):
-    anime = get_object_or_404(Anime, pk=pk)
-    print(anime,"ANIMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-    return render(request, 'AnimeApp/anime_detail.html', {'anime': anime})
+import requests
+
+def anime_detail(request, mal_id):
+    """
+    Fetches anime details from AniList GraphQL API using the provided query and variables.
+    Renders the fetched data directly in the template.
+    """
+    query = '''
+    query ($id: Int) {
+        Media (id: $id) {
+            title {
+                romaji
+            }
+            description
+            coverImage {
+                extraLarge
+            }
+            characters {
+                nodes {
+                    name {
+                        full
+                    }
+                    image {
+                        large
+                    }
+                    id
+                }
+            }
+        }
+    }
+    '''
+    variables = {
+        'id': mal_id,
+    }
+    url = "https://graphql.anilist.co"
+    response = requests.post(url, json={"query": query, "variables": variables})
+    print('ANIME DETAIL RESPONSE<CONTENT: ' , response.content)
+    if response.status_code == 200:
+        data = response.json().get("data", {})
+        anime_data = data.get("Media", {})
+        return render(request, "AnimeApp/anime_detail.html", {"anime": anime_data})
+    else:
+        return render(request, "AnimeApp/error.html", {"message": "Failed to fetch data"})
 
 # def recommendations(request):
 #     # Get user preferences (e.g., liked anime, watched anime)
