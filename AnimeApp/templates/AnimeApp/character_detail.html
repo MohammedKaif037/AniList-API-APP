@@ -5,7 +5,7 @@
   <div>
     <h1>{{ character.name.full }}</h1>
     {% if character.image.large %}
-    <img src="{{ character.image.large }}" alt="{{ character.name.full }}">
+    <img class="detail-img-top" src="{{ character.image.large }}" alt="{{ character.name.full }}">
     {% endif %}
     <p><strong>Native Name:</strong> {{ character.name.native }}</p>
     <p><strong>Age:</strong> {{ character.age }}</p>

@@ -3,8 +3,10 @@
 {% block content %}
 <div class="container">
   <h1>{{ anime.title.romaji }}</h1>
+  <div class="img-container">
+  <img src="{{ anime.coverImage.extraLarge }}" class="detail-img-top" alt="Cover Image">
+</div>
   <div class="card">
-      <img src="{{ anime.coverImage.extraLarge }}" class="card-img-top" alt="Cover Image">
       <div class="card-body">
           <p class="card-text">{{ anime.description | safe }}</p>
       </div>

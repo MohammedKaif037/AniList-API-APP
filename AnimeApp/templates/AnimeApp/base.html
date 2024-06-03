@@ -1,75 +1,142 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Anime Recommendation App</title>
-  
-  <!-- Bootstrap CSS from unpkg -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <style>
-    .navbar-nav {
-      flex: 1;
-      justify-content: center;
-    }
-    .d-flex {
-      flex: 1;
-      justify-content: center;
-    }
-    .card-img-top {
-    height: 320px; /* Adjust the height automatically */
-    object-fit: contain; /* Maintain the aspect ratio */
-    max-width: 100%; /* Ensure the image doesn't exceed the container width */
-  }
-  .card-body {
-    text-align: center;
-  }
- img{
-  max-height: 400px;
-  width: auto ;
- }
-  </style>
-</head>
-<body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'anime_list' %}">Anime Recommendation</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'anime_list' %}">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'upcoming' %}">Upcoming</a>
-          </li>
-          {% if user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
-          </li>
-          {% else %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'account:login' %}">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'account:register' %}">Register</a>
-          </li>
-          {% endif %}
-        </ul>
-        <!-- Add the search bar -->
-        <form class="d-flex ms-2" id="searchForm" action="search">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="searchInput" name="search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-      </div>
-    </div>
-  </nav>
-  <div class="container my-4">
-    {% block content %}
-    {% endblock %}
-  </div>
+  <head>
+    <title>Anime Recommendation App</title>
+    <!-- Bootstrap CSS from unpkg -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+/* General styles */
+body {
+  background-color: #000000; /* Black */
+  color: #FFFFFF; /* White */
+}
 
-  <!-- Bootstrap JS Bundle with Popper from unpkg -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script></body>
+/* Navbar styles */
+.navbar {
+  background-color: #8B0000; /* Dark Red */
+}
+.navbar-brand,
+.nav-link {
+  color: #FFFFFF; /* White */
+  transition: all 0.3s ease; /* Add transition for smooth effect */
+}
+.nav-link:hover {
+  color: #FF6347; /* Tomato */
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); /* Red glow effect on hover */
+}
+
+/* Card styles */
+.card {
+  background-color: #000000; /* Black */
+  border-color: #FF0000; /* Red */
+  box-shadow: 10px 0 20px rgba(255, 0, 0, 0.3); /* Red glow effect */
+  transition: all 0.3s ease; /* Add transition for smooth effect */
+}
+.card:hover {
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.7); /* Dominant red glow effect on hover */
+}
+.card-title {
+  color: #FF6347; /* Tomato */
+}
+.card-text {
+  color: #FF7F50; /* Coral */
+}
+
+/* Button styles */
+.btn-outline-primary {
+  color: #FF0000; /* Red */
+  border-color: #FF0000; /* Red */
+}
+.btn-outline-primary:hover {
+  background-color: #FF0000; /* Red */
+  color: #FFFFFF; /* White */
+}
+
+/* Other styles */
+.navbar-nav {
+  flex: 1;
+  justify-content: center;
+}
+.d-flex {
+  flex: 1;
+  justify-content: center;
+}
+.card-img-top {
+  height: 320px; /* Adjust the height automatically */
+  object-fit: contain; /* Maintain the aspect ratio */
+  max-width: 100%; /* Ensure the image doesn't exceed the container width */
+}
+.card-body {
+  text-align: center;
+}
+img {
+  max-height: 400px;
+  width: 244px;
+}
+ /* Detail Image styles */
+ .detail-img-top {
+        background-color: #000000; /* Black */
+        border-color: #FF0000; /* Red */
+        object-fit: contain;
+        box-shadow: 10px 0 20px rgba(255, 0, 0, 0.3); /* Red glow effect */
+        transition: all 0.3s ease; /* Add transition for smooth effect */
+      }
+      .detail-img-top:hover {
+        box-shadow: 0 0 30px rgba(255, 0, 0, 0.7); /* Dominant red glow effect on hover */
+      }
+
+      /* Centering the image */
+      .img-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'anime_list' %}">Anime Recommendation</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'anime_list' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'upcoming' %}">Upcoming</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account:login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account:register' %}">Register</a>
+            </li>
+            {% endif %}
+          </ul>
+          <!-- Add the search bar -->
+          <form class="d-flex ms-2" id="searchForm" action="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="searchInput" name="search">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+    <div class="container my-4">
+      {% block content %}
+      {% endblock %}
+    </div>
+    <!-- Bootstrap JS Bundle with Popper from unpkg -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>
