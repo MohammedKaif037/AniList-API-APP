@@ -4,8 +4,26 @@
   <title>Anime Recommendation App</title>
   
   <!-- Bootstrap CSS from unpkg -->
-  <link href="https://unpkg.com/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
-
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style>
+    .navbar-nav {
+      flex: 1;
+      justify-content: center;
+    }
+    .d-flex {
+      flex: 1;
+      justify-content: center;
+    }
+    .card-img-top {
+    height: 320px; /* Adjust the height automatically */
+    object-fit: contain; /* Maintain the aspect ratio */
+    max-width: 100%; /* Ensure the image doesn't exceed the container width */
+  }
+  .card-body {
+    text-align: center;
+  }
+ 
+  </style>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -14,7 +32,7 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link" href="{% url 'anime_list' %}">Home</a>
@@ -34,12 +52,12 @@
             <a class="nav-link" href="{% url 'account:register' %}">Register</a>
           </li>
           {% endif %}
-          <!-- Add the search bar -->
-        <form class="d-flex ms-auto" id="searchForm" action="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="searchInput" name="search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-          </form>
         </ul>
+        <!-- Add the search bar -->
+        <form class="d-flex ms-2" id="searchForm" action="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="searchInput" name="search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
       </div>
     </div>
   </nav>
@@ -49,6 +67,6 @@
   </div>
 
   <!-- Bootstrap JS Bundle with Popper from unpkg -->
-  <script src="https://unpkg.com/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script></body>
 </html>

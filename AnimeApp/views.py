@@ -71,6 +71,7 @@ def fetch_anime_data(request, sort_by='POPULARITY_DESC'):
         data = response.json().get("data", {})
 
         animes_data = data.get("Page", {}).get("media", [])
+        print(animes_data,"ANIMES_DATA")
         for anime_data in animes_data:
             anime, created = Anime.objects.get_or_create(
                 mal_id=anime_data["id"],
@@ -106,12 +107,23 @@ def fetch_anime_data(request, sort_by='POPULARITY_DESC'):
 
 
 
+
 def anime_list(request):
-    animes = Anime.objects.all()
-    return render(request, 'AnimeApp/anime_list.html', {'animes': animes})
+    animes = Anime.objects.all().prefetch_related('images')
+    anime_list = []
+    for anime in animes:
+        anime_image = anime.images.first()
+        anime_list.append({
+            'pk': anime.pk,
+            'title': anime.title,
+            'synopsis': anime.synopsis,
+            'image_url': anime_image.image_url if anime_image else None,
+        })
+    return render(request, 'AnimeApp/anime_list.html', {'animes': anime_list})
 
 def anime_detail(request, pk):
     anime = get_object_or_404(Anime, pk=pk)
+    print(anime,"ANIMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
     return render(request, 'AnimeApp/anime_detail.html', {'anime': anime})
 
 def recommendations(request):

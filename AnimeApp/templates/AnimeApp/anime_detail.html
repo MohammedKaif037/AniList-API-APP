@@ -1,44 +1,57 @@
 {% extends 'AnimeApp/base.html' %}
+{% load static %}
 
 {% block content %}
-<style>
-    /* Remove list styling */
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    /* Add margin between list items */
-    li {
-      margin-bottom: 20px;
-    }
-  </style>
-  <h1>{{ anime.title }}</h1>
-  <!-- <p>Debugging: ID{{ anime.mal_id }}</p> -->
-  <img src="{{ anime.image_url }}" alt="{{ anime.title }}">
-  <p>{{ anime.synopsis|safe }}</p>
-  <!-- Display other anime details -->
-
-  <h2>Characters</h2>
-  <ul>
-    {% for character in anime.characters.all %}
-      <li>
-        <a href="{% url 'character_detail' character_id=character.mal_id %}">
-            <img src="{{ character.image_url }}" alt="{{ character.name }}">
-          </a>        
-        <h3>{{ character.name }}</h3>
-        {% if character.role %}
-    </li>
-    <p>Role: {{ character.role }}</p>
-    <p>ID:{{ character.mal_id }}</p>
-    {% endif %}
-    {% endfor %}
-  </ul>
-
-  <h2>Additional Images</h2>
-  <div>
-    {% for image in anime.images.all %}
-      <img src="{{ image.image_url }}" alt="{{ anime.title }} image">
-    {% endfor %}
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        {% if anime.images.first %}
+        <img src="{{ anime.images.first.image_url }}" alt="{{ anime.title }} Cover Image">
+        {% else %}
+          <p>No cover image available.</p>
+        {% endif %}        
+      <div class="card-body">
+          <h5 class="card-title">{{ anime.title }}</h5>
+          <p class="card-text">{{ anime.synopsis|safe }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card mb-3">
+        <div class="card-header">
+          <h5 class="mb-0">Characters</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            {% for character in anime.characters.all %}
+              <div class="col-md-3 mb-3">
+                <div class="card">
+                  <a href="{% url 'character_detail' character_id=character.mal_id %}">
+                    <img src="{{ character.image_url }}" class="card-img-top" alt="{{ character.name }}">
+                  </a>
+                  <div class="card-body">
+                    <h5 class="card-title">{{ character.name }}</h5>
+                    {% if character.role %}
+                      <p class="card-text">Role: {{ character.role }}</p>
+                      <p class="card-text">ID: {{ character.mal_id }}</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Additional Images</h5>
+        </div>
+        <div class="card-body">
+          {% for image in anime.images.all %}
+            <img src="{{ image.image_url }}" class="img-fluid mb-3" alt="{{ anime.title }} image">
+          {% endfor %}
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock %}
