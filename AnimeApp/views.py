@@ -1,8 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Anime, Character, AnimeImage
 import requests
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import linear_kernel
 
 def home(request):
     return render(request, 'AnimeApp/base.html')
@@ -126,32 +124,32 @@ def anime_detail(request, pk):
     print(anime,"ANIMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
     return render(request, 'AnimeApp/anime_detail.html', {'anime': anime})
 
-def recommendations(request):
-    # Get user preferences (e.g., liked anime, watched anime)
-    liked_anime = Anime.objects.filter(...)  # Replace with your logic to get liked anime
+# def recommendations(request):
+#     # Get user preferences (e.g., liked anime, watched anime)
+#     liked_anime = Anime.objects.filter(...)  # Replace with your logic to get liked anime
 
-    # Create a TF-IDF matrix from anime synopses
-    tfidf = TfidfVectorizer(stop_words='english')
-    anime_synopses = Anime.objects.values_list('synopsis', flat=True)
-    tfidf_matrix = tfidf.fit_transform(anime_synopses)
+#     # Create a TF-IDF matrix from anime synopses
+#     tfidf = TfidfVectorizer(stop_words='english')
+#     anime_synopses = Anime.objects.values_list('synopsis', flat=True)
+#     tfidf_matrix = tfidf.fit_transform(anime_synopses)
 
-    # Compute the cosine similarity matrix
-    cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
+#     # Compute the cosine similarity matrix
+#     cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
 
-    # Get the indices of the liked anime
-    liked_anime_indices = [anime.pk - 1 for anime in liked_anime]
+#     # Get the indices of the liked anime
+#     liked_anime_indices = [anime.pk - 1 for anime in liked_anime]
 
-    # Calculate the similarity scores for the liked anime
-    similarity_scores = cosine_sim[liked_anime_indices].sum(axis=0) / len(liked_anime_indices)
+#     # Calculate the similarity scores for the liked anime
+#     similarity_scores = cosine_sim[liked_anime_indices].sum(axis=0) / len(liked_anime_indices)
 
-    # Sort the similarity scores in descending order
-    sorted_indices = similarity_scores.argsort()[::-1]
+#     # Sort the similarity scores in descending order
+#     sorted_indices = similarity_scores.argsort()[::-1]
 
-    # Get the recommended anime based on the sorted indices
-    recommended_anime_indices = sorted_indices[len(liked_anime):]
-    recommended_animes = [Anime.objects.get(pk=index + 1) for index in recommended_anime_indices]
+#     # Get the recommended anime based on the sorted indices
+#     recommended_anime_indices = sorted_indices[len(liked_anime):]
+#     recommended_animes = [Anime.objects.get(pk=index + 1) for index in recommended_anime_indices]
 
-    return render(request, 'AnimeApp/recommendations.html', {'recommended_animes': recommended_animes})
+#     return render(request, 'AnimeApp/recommendations.html', {'recommended_animes': recommended_animes})
 import requests
 from django.shortcuts import render
 
@@ -194,3 +192,92 @@ def character_detail(request, character_id):
         print(response.json())  # Print the response content for debugging
         return render(request, "AnimeApp/error.html", {"message": "Failed to fetch character data"})
 
+import requests
+from django.shortcuts import render
+from .models import Anime, Character, AnimeImage
+
+def upcoming_anime(request):
+    """
+    Fetches upcoming anime data from AniList GraphQL API.
+    Updates the database with the retrieved data.
+    """
+    query = '''
+    query ($season: MediaSeason, $seasonYear: Int, $sort: [MediaSort], $page: Int, $perPage: Int) {
+        Page (page: $page, perPage: $perPage) {
+            pageInfo {
+                total
+                currentPage
+                lastPage
+                hasNextPage
+                perPage
+            }
+            media (season: $season, seasonYear: $seasonYear, sort: $sort) {
+                id
+                title {
+                    romaji
+                    english
+                    native
+                }
+                description
+                characters(page: 1, perPage: 10) {
+                    nodes {
+                        id
+                        name { full }
+                        image { large }
+                    }
+                }
+                coverImage {
+                    extraLarge
+                }
+            }
+        }
+    }
+    '''
+
+    variables = {
+        'season': 'UPCOMING',  # Specify the season as 'UPCOMING' to get upcoming anime
+        'seasonYear': 2023,  # Specify the year for which you want to get upcoming anime
+        'sort': ['POPULARITY_DESC'],
+        'page': 1,
+        'perPage': 50,
+    }
+
+    url = "https://graphql.anilist.co"
+    response = requests.post(url, json={"query": query, "variables": variables})
+
+    if response.status_code == 200:
+        data = response.json().get("data", {})
+        upcoming_animes_data = data.get("Page", {}).get("media", [])
+
+        for anime_data in upcoming_animes_data:
+            anime, created = Anime.objects.get_or_create(
+                mal_id=anime_data["id"],
+                defaults={
+                    "title": anime_data["title"]["romaji"],
+                    "synopsis": anime_data["description"],
+                },
+            )
+
+            if created:
+                characters_data = anime_data.get("characters", {}).get("nodes", [])
+                for character_data in characters_data:
+                    role = character_data.get("role", "")
+                    Character.objects.get_or_create(
+                        mal_id=character_data["id"],
+                        defaults={
+                            "name": character_data["name"]["full"],
+                            "image_url": character_data["image"]["large"],
+                            "anime": anime,
+                            "role": role
+                        }
+                    )
+
+                image_data = anime_data.get("coverImage", {}).get("extraLarge")
+                if image_data:
+                    AnimeImage.objects.get_or_create(anime=anime, image_url=image_data)
+
+        upcoming_animes = Anime.objects.filter(season='UPCOMING', season_year=2023)
+        return render(request, "AnimeApp/upcoming_anime_list.html", {"upcoming_animes": upcoming_animes})
+
+    else:
+        return render(request, "AnimeApp/error.html", {"message": "Failed to fetch data"})
