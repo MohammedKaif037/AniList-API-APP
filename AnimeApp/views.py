@@ -4,7 +4,6 @@ import requests
 
 def home(request):
     return render(request, 'AnimeApp/base.html')
-
 def search_anime(request):
     """
     Searches for anime based on the user's input using an external API.
@@ -15,18 +14,20 @@ def search_anime(request):
         # Construct GraphQL query
         query = """
         query ($search: String) {
-            Media (search: $search, type: ANIME) {
-                id
-                title {
-                    romaji
-                    english
-                    native
+            Page {
+                media(search: $search, type: ANIME) {
+                    id
+                    title {
+                        romaji
+                        english
+                        native
+                    }
+                    coverImage {
+                        large
+                    }
+                    description (asHtml: false)
+                    # Add other fields you want to retrieve
                 }
-                coverImage {
-                    large
-                }
-                description (asHtml: false)
-                # Add other fields you want to retrieve
             }
         }
         """
@@ -38,17 +39,18 @@ def search_anime(request):
 
         # Send a POST request
         response = requests.post('https://graphql.anilist.co', json=data)
-        print(f'SEARCHED_RESULTS for {search_query}',response.content)
+        print(f'SEARCHED_RESULTS for {search_query}', response.content)
 
         if response.status_code == 200:
             data = response.json()
-            matched_animes = data.get('data', {}).get('Media', [])
-            print('Matched animes',matched_animes)
+            matched_animes = data.get('data', {}).get('Page', {}).get('media', [])
+            print('Matched animes', matched_animes)
             return render(request, 'AnimeApp/search_results.html', {'matched_animes': matched_animes, 'query': search_query})
         else:
             return render(request, 'AnimeApp/error.html', {"message": "Failed to fetch data from API"})
     else:
         return render(request, 'AnimeApp/error.html', {"message": "Invalid request"})
+
 def fetch_anime_data(request, sort_by='POPULARITY_DESC'):
     """
     Fetches anime data from AniList GraphQL API using the provided query and variables.

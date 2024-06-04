@@ -5,23 +5,22 @@
 <div class="container">
     <h1>Search Results for "{{ query }}"</h1>
     <div class="row">
+        {% for anime in matched_animes %}
         <div class="col-md-4 mb-4">
             <div class="card">
-                {% if matched_animes.coverImage.large %}
-                <a href="{% url 'anime_detail' mal_id=matched_animes.id %}">
-
-                <img src="{{ matched_animes.coverImage.large }}" class="card-img-top" alt="{{ matched_animes.title.romaji }} Cover Image">
+                {% if anime.coverImage.large %}
+                <a href="{% url 'anime_detail' mal_id=anime.id %}">
+                    <img src="{{ anime.coverImage.large }}" class="card-img-top" alt="{{ anime.title.romaji }} Cover Image">
                 </a>
-
                 {% else %}
                 <div class="no-image-placeholder"> No Image Available </div>
                 {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">{{ matched_animes.title.romaji }}</h5>
-                    <p class="card-text">{{ matched_animes.description|safe }}</p>
-                </div>
+                    <h5 class="card-title">{{ anime.title.romaji }}</h5>
+                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
