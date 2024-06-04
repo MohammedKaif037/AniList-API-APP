@@ -84,21 +84,6 @@ def fetch_anime_data(request, sort_by='POPULARITY_DESC'):
         return render(request, "AnimeApp/anime_list.html", {"animes": animes_data})
     else:
         return render(request, "AnimeApp/error.html", {"message": "Failed to fetch data"})
-def anime_list(request):
-    animes = Anime.objects.all().prefetch_related('images')
-    anime_list = []
-    for anime in animes:
-        anime_image = anime.images.first()
-        anime_list.append({
-            'pk': anime.pk,
-            'title': anime.title,
-            'synopsis': anime.synopsis,
-            'image_url': anime_image.image_url if anime_image else None,
-        })
-    return render(request, 'AnimeApp/anime_list.html', {'animes': anime_list})
-
-import requests
-
 def anime_detail(request, mal_id):
     """
     Fetches anime details from AniList GraphQL API using the provided query and variables.
@@ -111,6 +96,8 @@ def anime_detail(request, mal_id):
                 romaji
             }
             description
+            averageScore
+            episodes
             coverImage {
                 extraLarge
             }
@@ -133,7 +120,7 @@ def anime_detail(request, mal_id):
     }
     url = "https://graphql.anilist.co"
     response = requests.post(url, json={"query": query, "variables": variables})
-    print('ANIME DETAIL RESPONSE<CONTENT: ' , response.content)
+    print('ANIME DETAIL RESPONSE<CONTENT: ', response.content)
     if response.status_code == 200:
         data = response.json().get("data", {})
         anime_data = data.get("Media", {})
@@ -277,3 +264,75 @@ def upcoming_anime(request):
     else:
         return render(request, 'AnimeApp/error.html', {'message': 'Failed to fetch data'})
 
+def fetch_anime_by_genre(request, genre):
+    """
+    Fetches anime data from AniList GraphQL API based on the provided genre.
+    Renders the fetched data directly in the template.
+    """
+    query = '''
+    query ($genre: String, $page: Int, $perPage: Int) {
+        Page (page: $page, perPage: $perPage) {
+            media (genre: $genre) {
+                id
+                title {
+                    romaji
+                }
+                description
+                coverImage {
+                    extraLarge
+                }
+            }
+        }
+    }
+    '''
+    variables = {
+        'genre': genre.upper(),
+        'page': 1,
+        'perPage': 50,
+    }
+    url = "https://graphql.anilist.co"
+    response = requests.post(url, json={"query": query, "variables": variables})
+    print('GENRE RESPONSE:', response.content)
+    if response.status_code == 200:
+        data = response.json().get("data", {})
+        animes_data = data.get("Page", {}).get("media", [])
+        return render(request, "AnimeApp/anime_list.html", {"animes": animes_data, "genre": genre})
+    else:
+        return render(request, "AnimeApp/error.html", {"message": "Failed to fetch data"})
+    
+def fetch_anime_by_year(request, year):
+    """
+    Fetches anime data from AniList GraphQL API based on the provided year.
+    Renders the fetched data directly in the template.
+    """
+    query = '''
+    query ($year: Int, $page: Int, $perPage: Int) {
+        Page (page: $page, perPage: $perPage) {
+            media (seasonYear: $year) {
+                id
+                title {
+                    romaji
+                }
+                description
+                coverImage {
+                    extraLarge
+                }
+            }
+        }
+    }
+    '''
+    variables = {
+        'year': year,
+        'page': 1,
+        'perPage': 50,
+    }
+    url = "https://graphql.anilist.co"
+    response = requests.post(url, json={"query": query, "variables": variables})
+    if response.status_code == 200:
+        data = response.json().get("data", {})
+        animes_data = data.get("Page", {}).get("media", [])
+        return render(request, "AnimeApp/anime_list.html", {"animes": animes_data, "year": year})
+    else:
+        return render(request, "AnimeApp/error.html", {"message": "Failed to fetch data"})
+
+     

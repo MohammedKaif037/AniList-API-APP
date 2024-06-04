@@ -10,6 +10,10 @@
       <div class="card-body">
           <p class="card-text">{{ anime.description | safe }}</p>
       </div>
+      <div class="card-footer" style="text-align: center;">
+        <p class="card-text">Episodes: {{ anime.episodes }}</p>
+        <p class="card-text">Average Score: {{ anime.averageScore }}</p>
+      </div>
   </div>
   
   <h2>Characters:</h2>

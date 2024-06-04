@@ -1,8 +1,8 @@
 {% extends 'AnimeApp/base.html' %}
 {% block content %}
 <div class="container">
-  <h1>Anime Trending</h1>
-  <div class="row">
+  <h1>Anime List{% if genre %} - {{ genre|title }} Genre{% endif %}{% if year %} - {{ year }} Year{% endif %}</h1>
+    <div class="row">
     {% for anime in animes %}
     <div class="col-md-3 mb-4">
       <div class="card">

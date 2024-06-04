@@ -5,76 +5,78 @@
     <!-- Bootstrap CSS from unpkg -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
-/* General styles */
-body {
-  background-color: #000000; /* Black */
-  color: #FFFFFF; /* White */
-}
+      /* General styles */
+      body {
+        background-color: #000000; /* Black */
+        color: #FFFFFF; /* White */
+      }
 
-/* Navbar styles */
-.navbar {
-  background-color: #8B0000; /* Dark Red */
-}
-.navbar-brand,
-.nav-link {
-  color: #FFFFFF; /* White */
-  transition: all 0.3s ease; /* Add transition for smooth effect */
-}
-.nav-link:hover {
-  color: #FF6347; /* Tomato */
-  text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); /* Red glow effect on hover */
-}
+      /* Navbar styles */
+      .navbar {
+        background-color: #8B0000; /* Dark Red */
+      }
+      .navbar-brand,
+      .nav-link {
+        color: #FFFFFF; /* White */
+        transition: all 0.3s ease; /* Add transition for smooth effect */
+      }
+      .nav-link:hover {
+        color: #FF6347; /* Tomato */
+        text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); /* Red glow effect on hover */
+      }
 
-/* Card styles */
-.card {
-  background-color: #000000; /* Black */
-  border-color: #FF0000; /* Red */
-  box-shadow: 10px 0 20px rgba(255, 0, 0, 0.3); /* Red glow effect */
-  transition: all 0.3s ease; /* Add transition for smooth effect */
-}
-.card:hover {
-  box-shadow: 0 0 30px rgba(255, 0, 0, 0.7); /* Dominant red glow effect on hover */
-}
-.card-title {
-  color: #FF6347; /* Tomato */
-}
-.card-text {
-  color: #FF7F50; /* Coral */
-}
+      /* Card styles */
+      .card {
+        background-color: #000000; /* Black */
+        border-color: #FF0000; /* Red */
+        box-shadow: 10px 0 20px rgba(255, 0, 0, 0.3); /* Red glow effect */
+        transition: all 0.3s ease; /* Add transition for smooth effect */
+      }
+      .card:hover {
+        box-shadow: 0 0 30px rgba(255, 0, 0, 0.7); /* Dominant red glow effect on hover */
+      }
+      .card-title {
+        color: #FF6347; /* Tomato */
+      }
+      .card-text {
+        color: #FF7F50; /* Coral */
+      }
 
-/* Button styles */
-.btn-outline-primary {
-  color: #FF0000; /* Red */
-  border-color: #FF0000; /* Red */
-}
-.btn-outline-primary:hover {
-  background-color: #FF0000; /* Red */
-  color: #FFFFFF; /* White */
-}
-
-/* Other styles */
-.navbar-nav {
-  flex: 1;
-  justify-content: center;
-}
-.d-flex {
-  flex: 1;
-  justify-content: center;
-}
-.card-img-top {
-  height: 320px; /* Adjust the height automatically */
-  object-fit: contain; /* Maintain the aspect ratio */
-  max-width: 100%; /* Ensure the image doesn't exceed the container width */
-}
-.card-body {
-  text-align: center;
-}
-img {
-  max-height: 400px;
-  width: 244px;
-}
- /* Detail Image styles */
- .detail-img-top {
+      /* Button styles */
+      .btn-outline-primary {
+        color: #FF0000; /* Red */
+        border-color: #FF0000; /* Red */
+      }
+      .btn-outline-primary:hover {
+        background-color: #FF0000; /* Red */
+        color: #FFFFFF; /* White */
+      }
+      .text-center {
+        text-align: center;
+      }
+      /* Other styles */
+      .navbar-nav {
+        flex: 1;
+        justify-content: center;
+      }
+      .d-flex {
+        flex: 1;
+        justify-content: center;
+      }
+      .card-img-top {
+        height: 320px; /* Adjust the height automatically */
+        object-fit: contain; /* Maintain the aspect ratio */
+        max-width: 100%; /* Ensure the image doesn't exceed the container width */
+      }
+      .card-body {
+        text-align: center;
+      }
+      img {
+        max-height: 400px;
+        width: 244px;
+      }
+      /* Detail Image styles */
+      .detail-img-top {
         background-color: #000000; /* Black */
         border-color: #FF0000; /* Red */
         object-fit: contain;
@@ -92,6 +94,15 @@ img {
         align-items: center;
         flex-direction: column;
         text-align: center;
+      }
+
+      /* Footer styles */
+      footer {
+        background-color: #8B0000; /* Dark Red */
+        color: #FFFFFF; /* White */
+        padding: 20px 0;
+        text-align: center;
+        margin-top: 20px;
       }
     </style>
   </head>
@@ -118,10 +129,65 @@ img {
             <li class="nav-item">
               <a class="nav-link" href="{% url 'account:login' %}">Login</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'account:register' %}">Register</a>
-            </li>
             {% endif %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Genre
+              </a>
+              <div class="dropdown-menu" aria-labelledby="categoryDropdown">
+                <a class="dropdown-item" href="{% url 'anime_genre' 'action' %}">Action</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'adventure' %}">Adventure</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'comedy' %}">Comedy</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'drama' %}">Drama</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'ecchi' %}">Ecchi</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'fantasy' %}">Fantasy</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'hentai' %}">Hentai</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'horror' %}">Horror</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'mahou shoujo' %}">Mahou Shoujo</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'mecha' %}">Mecha</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'music' %}">Music</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'mystery' %}">Mystery</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'psychological' %}">Psychological</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'romance' %}">Romance</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'sci-fi' %}">Sci-Fi</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'slice of life' %}">Slice of Life</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'sports' %}">Sports</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'supernatural' %}">Supernatural</a>
+                <a class="dropdown-item" href="{% url 'anime_genre' 'thriller' %}">Thriller</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="yearDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Year
+              </a>
+              <div class="dropdown-menu" aria-labelledby="yearDropdown">
+                <a class="dropdown-item" href="{% url 'anime_year' 2024 %}">2024</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2023 %}">2023</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2022 %}">2022</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2021 %}">2021</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2020 %}">2020</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2019 %}">2019</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2018 %}">2018</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2017 %}">2017</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2016 %}">2016</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2015 %}">2015</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2014 %}">2014</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2013 %}">2013</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2012 %}">2012</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2011 %}">2011</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2010 %}">2010</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2009 %}">2009</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2008 %}">2008</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2007 %}">2007</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2006 %}">2006</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2005 %}">2005</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2004 %}">2004</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2003 %}">2003</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2002 %}">2002</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2001 %}">2001</a>
+                <a class="dropdown-item" href="{% url 'anime_year' 2000 %}">2000</a>
+              </div>
+            </li>
           </ul>
           <!-- Add the search bar -->
           <form class="d-flex ms-2" id="searchForm" action="search">
@@ -135,8 +201,18 @@ img {
       {% block content %}
       {% endblock %}
     </div>
+    <footer>
+      <div class="container">
+        <p>&copy; 2024 Anime Recommendation App. All rights reserved.</p>
+        <p>Follow us on:
+          <a href="#" class="text-white">Facebook</a> |
+          <a href="#" class="text-white">Twitter</a> |
+          <a href="#" class="text-white">Instagram</a>
+        </p>
+      </div>
+    </footer>
     <!-- Bootstrap JS Bundle with Popper from unpkg -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
   </body>
 </html>
