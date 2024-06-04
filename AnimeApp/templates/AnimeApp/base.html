@@ -189,8 +189,8 @@
               </div>
             </li>
           </ul>
-          <!-- Add the search bar -->
-          <form class="d-flex ms-2" id="searchForm" action="search">
+           <!-- Add the search bar -->
+          <form class="d-flex ms-2" id="searchForm" action="{% url 'search' %}" method="get">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="searchInput" name="search">
             <button class="btn btn-outline-primary" type="submit">Search</button>
           </form>
