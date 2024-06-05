@@ -262,7 +262,7 @@ def upcoming_anime(request):
 
     if response.status_code == 200:
         data = response.json().get("data", {}).get("Page", {}).get("media", [])
-        return render(request, 'AnimeApp/upcoming_anime_list.html', {'animes': data})
+        return render(request, 'AnimeApp/anime_list.html', {'animes': data,'Upcoming':'Upcoming'})
     else:
         return render(request, 'AnimeApp/error.html', {'message': 'Failed to fetch data'})
 
