@@ -55,54 +55,15 @@ Include frequently asked questions and their corresponding answers to assist use
 ## Feedback
 We welcome any feedback or suggestions for improving the application.
 
-## Github Profile - About Me
-Provide a brief introduction about yourself and your interests related to the project.
-
-## Github Profile - Introduction
-Introduce the repository and its purpose, along with any noteworthy features or highlights.
-
-## Github Profile - Links
-Include relevant links such as the project's website, documentation, and social media profiles.
-
-## Github Profile - Other
-Additional information about the repository, such as contribution guidelines or code of conduct.
-
-## Github Profile - Skills
-List the skills or technologies utilized in the project.
-
-## Installation
-Include detailed instructions for installing and setting up the project locally.
-
-## Lessons
-Document any challenges faced during development and the lessons learned.
-
-## License
-Specify the project's license information.
-
-## Acknowledgements
-Acknowledge any individuals or organizations that contributed to the project.
-
-## API Reference
-Provide references to the AniList GraphQL API documentation.
-
-## Appendix
-Include any additional information or resources relevant to the project.
-
-## Authors
-List the authors or contributors of the project.
-
-## Badges
-Display badges for build status, code coverage, etc.
-
 ## Color Reference
 
 The project uses the following color palette:
 
-| Color             | Hex                                                        |
+| Color             | Name                                                        |
 | ----------------- | ---------------------------------------------------------- |
-| Primary Color     | ![#000000](https://via.placeholder.com/10/000000?text=+) `#000000` |
-| Secondary Color   | ![#FF0000](https://via.placeholder.com/10/FFFFFF?text=+) `#FF0000` |
-| Accent Color      | ![#FF0000B3](https://via.placeholder.com/10/00FF00?text=+) `#FF0000B3` |
+| Primary Color     |  Red |
+| Secondary Color   | Black |
+| Accent Color      | White |
 
 ## Contributing
 Guidelines for contributing to the project.
@@ -113,9 +74,18 @@ Link to a demo video or live demonstration of the application.
 ## Deployment
 Instructions for deploying the application to a production environment.
 
-## Documentation
-Links to comprehensive documentation for the project.
+## Style Guide
 
-## Environment Variables
-List and describe any required environment variables.
+The project follows the [PEP 8 Style Guide](https://www.python.org/dev/peps/pep-0008/) for Python code and the [Bootstrap documentation](https://getbootstrap.com/docs/5.0/getting-started/introduction/) for HTML/CSS/JS.
+## Support
+
+If you encounter any issues or have questions about the project, please open an issue on the project's GitHub repository or reach out to the project maintainers.
+
+## Authors
+
+- [Mohammed Kaif](https://github.com/MohammedKaif037)
+
+## Badges
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
