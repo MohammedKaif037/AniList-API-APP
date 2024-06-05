@@ -5,7 +5,9 @@
   <div>
     <h1>{{ character.name.full }}</h1>
     {% if character.image.large %}
-    <img class="detail-img-top" src="{{ character.image.large }}" alt="{{ character.name.full }}">
+    <img class="detail-img-top" id="characterImage" src="{{ character.image.large }}" alt="{{ character.name.full }}">
+    <br>
+    <button id="downloadButton" class="btn btn-danger mt-3">Download Image</button>
     {% endif %}
     <p><strong>Native Name:</strong> {{ character.name.native }}</p>
     <p><strong>Age:</strong> {{ character.age }}</p>
@@ -21,4 +23,17 @@
     <p><strong>Blood Type:</strong> {{ character.bloodType }}</p>
   </div>
 </div>
+
+<script>
+  document.getElementById('downloadButton').addEventListener('click', function() {
+    var image = document.getElementById('characterImage');
+    var imageUrl = image.src;
+    var link = document.createElement('a');
+    link.href = imageUrl;
+    link.download = '{{ character.name.full }}.jpg';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+</script>
 {% endblock %}
