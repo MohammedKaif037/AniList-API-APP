@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'AnimeApp',
-    'accounts',
- ]
+  ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
