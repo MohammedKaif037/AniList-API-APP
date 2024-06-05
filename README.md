@@ -42,9 +42,6 @@ To run tests:
 1. Execute `python manage.py test` in your terminal.
 2. Review the test results for any failures or errors.
 
-## FAQ
-Include frequently asked questions and their corresponding answers to assist users.
-
 ## Features
 - Search functionality for finding specific anime titles.
 - Filtering options by genre and year.
@@ -68,11 +65,22 @@ The project uses the following color palette:
 ## Contributing
 Guidelines for contributing to the project.
 
-## Demo
-Link to a demo video or live demonstration of the application.
+## Screenshots
 
-## Deployment
-Instructions for deploying the application to a production environment.
+### Screenshot 1 - HOME
+![Screenshot 1](https://github.com/MohammedKaif037/AniList-API-APP/blob/animetest/Screenshots/ANIHOME.png)
+
+### Screenshot 2 - Upcoming
+![Screenshot 2](https://github.com/MohammedKaif037/AniList-API-APP/blob/animetest/Screenshots/ANIUPCOMING.png)
+
+### Screenshot 3 - Genre
+![Screenshot 3](https://github.com/MohammedKaif037/AniList-API-APP/blob/animetest/Screenshots/ANIGENRE.png)
+
+### Screenshot 4 - Year
+![Screenshot 4](https://github.com/MohammedKaif037/AniList-API-APP/blob/animetest/Screenshots/ANIYEAR.png)
+
+### Screenshot 5 - Search
+![Screenshot 5](https://github.com/MohammedKaif037/AniList-API-APP/blob/animetest/Screenshots/ANIDEATH.png)
 
 ## Style Guide
 
